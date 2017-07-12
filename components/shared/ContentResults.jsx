@@ -40,18 +40,30 @@ class ContentResults extends Component
 	 */
 	render()
 	{
+
+		let result = (this.props.req_gsa === null) ? '' : this.props.req_gsa.map(item => <ItemSearch key={`item-${item.id}`} {...item}/>);
+
 		return (<div className="refelx-mosaic-01 ancho_dos dos-pisos refelx-mosaic-01__0">
 					<div className="refelx-mosaic-01__cuerpo__columna-2">
-						{/* BEGIN : Contenedor de resultados. */}
 						<section className="refelx-mosaic-01__content">
-							{this.props.req_gsa.map(item => <ItemSearch key={`item-${item.id}`} {...item}/>)}
+							{result}
 						</section>
-						{/* END   : Contenedor de resultados. */}
 					</div>
 				</div>);
 	}//render
 
 }//ContentResults
+
+//==================================================//
+
+/**
+ * Props por defecto.
+ * 
+ * @type JSON
+ */
+ContentResults.defaultProps = {req_gsa : null};
+
+//==================================================//
 
 /**
  * Se exporta el modulo ContentResults.

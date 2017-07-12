@@ -3,8 +3,16 @@
  */
 import React, { Component } from "react";
 
+//=================== CONSTANTES ===================//
+
+/**
+ * Referencia al icono.
+ * 
+ * @type String.
+ */
 const PATH_ICON = "http://i2.esmas.com/las-estrellas/assets/img/";
 
+//==================================================//
 
 /**
  * Vista para los items de la busqueda.
@@ -94,6 +102,8 @@ ItemSearch.defaultProps = {
 							type        : "gallery",
 							url         : window.location.origin
 						  };
+
+//==================================================//
 
 /**
  * Se exporta el modulo ItemSearch.

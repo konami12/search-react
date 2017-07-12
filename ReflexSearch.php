@@ -1,6 +1,6 @@
 <?php
 /*
-Component name: Reflex Search
+Component name: Reflex Search React
 Component description: Reflex Search made with UI Reflex
 */
 
@@ -132,6 +132,22 @@ class UI_ReflexSearch_Component {
                     "group" => "GSA",
                 ),
                 array(
+                    "param_name" => "requiredfields",
+                    "type" => "textfield",
+                    "heading" => __("Required fields", "my-text-domain"),
+                    "value" => '7',
+                    "holder" => "div",
+                    "group" => "GSA",
+                ),
+                array(
+                    "param_name" => "requiredfields",
+                    "type" => "textfield",
+                    "heading" => __("Required fields", "my-text-domain"),
+                    "value" => '3',
+                    "holder" => "div",
+                    "group" => "GSA",
+                ),
+                array(
                     "param_name" => "btn_todos",
                     "type" => "textfield",
                     "heading" => __("Boton Todos", "my-text-domain"),
@@ -258,9 +274,15 @@ class UI_ReflexSearch_Component {
                     }";
         //union de todos los JSON
         $json = "{
-                    \"gsa\" : " . $jsonGSA . ",
-                    \"btn\" : " . $jsonBTN . ",
-                    \"msg\" : " . $jsonMSG . "
+                    \"config_gsa\"      : " . $jsonGSA . ",
+                    \"btn_all\"         : \"" . $btn_todos  . "\",
+                    \"btn_photo\"       : \"" . $btn_fotos  . "\",
+                    \"btn_video\"       : \"" . $btn_videos  . "\",
+                    \"btn_chapter\"     : \"" . $btn_capitulos  . "\",
+                    \"btn_note\"        : \"" . $btn_notas  . "\",
+                    \"msg_result\"      : \"" . $txt_resultados . "\",
+                    \"msg_error\"       : \"" . $txt_sinresultados . "\",
+                    \"msg_recommend\"   : \"" . $txt_recomendacion . "\"
                  }";
 
         //$html .= '<section class="prime-secciones">';
@@ -273,19 +295,17 @@ class UI_ReflexSearch_Component {
         //$html .= '<a data-search="reflex-icon-nota" href="#">'.(($btn_notas=='')?'Notas':$btn_notas).'</a>';
         //$html .= '</div>';
         //$html .= '</section>';
-        //
         //$html .= '<section class="prime-secciones_2 hidden">';
         //$html .= '<p id="title-no-results" class="prime-secciones__title_2">'.(($txt_resultados=='')?'*-:':$txt_resultados).' <strong></strong></p>';
         //$html .= '<div class="seccion_alerta"><p class="alerta"><img src="http://i2.esmas.com/las-estrellas/assets/img/alerta.svg"></p></div>';
         //$html .= '<p id="subtitle-no-results" class="prime-secciones__title_2">'.(($txt_sinresultados=='')?'Lo sentimos, tú búsqueda no arrojó resultados,':$txt_sinresultados).'<br>'.(($txt_recomendacion=='')?'pero te recomendamos:':$txt_recomendacion).'<p>';
         //$html .= '</section>';
-
-
-        $html .= "<section class=\"prime-secciones\" data-config='" . $json  ."' id=\"react-ui-reflex-search\">";
-        $html .= "</section>";
-
         //$html .= do_shortcode('[reflex-mosaic-01 modo="contenedor" plantilla="'.$plantilla.'"]');
         //$html .= do_shortcode('[reflex-generic-button mode="more" text="'.(($btn_vermas=='')?'VER MÁS':$btn_vermas).'" url="#"]');
+        //
+        $html .= "<section class=\"prime-secciones\" data-config='" . $json  ."' id=\"react-ui-reflex-search\">";
+        $html .= "</section>";
+        
         return $html;
     }
 }
