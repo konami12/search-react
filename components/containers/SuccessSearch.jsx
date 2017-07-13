@@ -98,7 +98,7 @@ class SuccessSearch extends Component
 		return (<section className="prime-secciones">
                     <section className="prime-secciones">
                         <div className="prime-secciones__buttons">
-                            <a data-filter={FILTER_FULL} className={BTN_CLASS} href={`#${this.props.param_search}`} onClick={this.filter} title={this.props.btn_all}>{this.props.btn_all}</a>
+                            <a data-filter={FILTER_FULL} className={BTN_CLASS} href={`#${PARAM_SEARCH}`} onClick={this.filter} title={this.props.btn_all}>{this.props.btn_all}</a>
                             <a data-filter={FILTER_FOTO} href={`#${PARAM_SEARCH}`} onClick={this.filter} title={this.props.btn_photo}>{this.props.btn_photo}</a>
                             <a data-filter={FILTER_VIDEO} href={`#${PARAM_SEARCH}`} onClick={this.filter} title={this.props.btn_video}>{this.props.btn_video}</a>
                             <a data-filter={FILTER_CAPITULO} href={`#${PARAM_SEARCH}`} onClick={this.filter} title={this.props.btn_chapter}>{this.props.btn_chapter}</a>

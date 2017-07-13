@@ -40,8 +40,7 @@ class ContentResults extends Component
 	 */
 	render()
 	{
-
-		let result = (this.props.req_gsa === null) ? '' : this.props.req_gsa.map(item => <ItemSearch key={`item-${item.id}`} {...item}/>);
+		let result = (this.props.req_gsa === null) ? '' : this.props.req_gsa.map((item, index) => <ItemSearch key={`item${index}-${item.id}`} {...item}/>);
 
 		return (<div className="refelx-mosaic-01 ancho_dos dos-pisos refelx-mosaic-01__0">
 					<div className="refelx-mosaic-01__cuerpo__columna-2">

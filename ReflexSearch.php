@@ -38,6 +38,24 @@ class UI_ReflexSearch_Component {
                         '2x2 Mosaico' => '2x2'
                     )
                 ),
+                array(
+                    "param_name" => "load_content_desktop",
+                    "type"       => "textfield",
+                    "heading"    => __("Número máximo de veces que se podra cargar más contenido modo escritorio (desktop).", "my-text-domain"),
+                    "value"      => 7,
+                    "holder"     => "div",
+                    "group"      => "GSA"
+                ),
+                array(
+                    "param_name" => "load_content_mobile",
+                    "type"       => "textfield",
+                    "heading"    => __("Número máximo de veces que se podra cargar más contenido en modo móvil (smartphone).", "my-text-domain"),
+                    "value"      => 3,
+                    "holder"     => "div",
+                    "group"      => "GSA"
+                ),
+
+
                  array(
                     "param_name" => "consulta",
                     "type" => "textfield",
@@ -241,18 +259,20 @@ class UI_ReflexSearch_Component {
             'txt_resultados' => '',
             'txt_sinresultados' => '',
             'txt_recomendacion' => '',
+            "load_content_desktop" => '',
+            "load_content_mobile" => ''
         ), $atts));
         //Nota: me falta ver lo de la plantillita.
 
         //configuracion GSA
         $jsonGSA = "{
                         \"client\"         : \"" . $client . "\", 
-                        \"min\"            : \"" . $min_numero . "\", 
+                        \"min\"            : " . $min_numero . ", 
                         \"module\"         : \"search_index_0\",
-                        \"num\"            : \"" . $numero . "\" , 
+                        \"num\"            : " . $numero . " , 
                         \"q\"              : \"" . $consulta . "\" , 
                         \"requiredfields\" : \"" . $requiredfields . "\",
-                        \"start\"          : \"0\",
+                        \"start\"          : 0,
                         \"site\"           : \"" . $site . "\",
                         \"sort\"           : \"meta:creationDate:D:ED\"
                     }";
@@ -272,6 +292,7 @@ class UI_ReflexSearch_Component {
                         \"msg_error\"    : \"" . $txt_sinresultados . "\",
                         \"msg_recomend\" : \"" . $txt_recomendacion . "\"
                     }";
+
         //union de todos los JSON
         $json = "{
                     \"config_gsa\"      : " . $jsonGSA . ",
@@ -280,6 +301,8 @@ class UI_ReflexSearch_Component {
                     \"btn_video\"       : \"" . $btn_videos  . "\",
                     \"btn_chapter\"     : \"" . $btn_capitulos  . "\",
                     \"btn_note\"        : \"" . $btn_notas  . "\",
+                    \"load_desktop\"    : " . $load_content_desktop . ",
+                    \"load_mobile\"     : " . $load_content_mobile . ",
                     \"msg_result\"      : \"" . $txt_resultados . "\",
                     \"msg_error\"       : \"" . $txt_sinresultados . "\",
                     \"msg_recommend\"   : \"" . $txt_recomendacion . "\"
@@ -305,7 +328,7 @@ class UI_ReflexSearch_Component {
         //
         $html .= "<section class=\"prime-secciones\" data-config='" . $json  ."' id=\"react-ui-reflex-search\">";
         $html .= "</section>";
-        
+
         return $html;
     }
 }

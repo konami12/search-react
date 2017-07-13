@@ -65,25 +65,26 @@ class ItemSearch extends Component
 	render()
 	{
 		return (<div className="reflex-mosaic-01__item">
-					{/* BEGIN : Construccion del item */}
-					<article className="reflex-mosaic-01__item-article">
-						<a href={this.props.url} title={this.props.description}>
-							{/* BEGIN : Contenedor imagen */}
-							<div className="reflex-mosaic-01__img">
-								<img alt={`imagen - ${this.props.description}`} className="imagen-fondo" src={this.props.background} title={this.props.title}/>
-								{this.iconType}
-							</div>
-							{/* END   : Contenedor imagen */}
-							
-							{/* BEGIN : Descripcion del item */}
-							<div className="reflex-mosaic-01__description color-telenovelas">
-								<p className="reflex-mosaic-01__title">{this.props.title}</p>
-								<p className="reflex-mosaic-01__desc">{this.props.description}</p>
-							</div>
-							{/* END   : Descripcion del item */}
-						</a>
-					</article>
-					{/* END   : Consturccion del item*/}
+					{/* BEGIN : Balidacion par identificar espacios para banners */}
+					{!this.props.banner &&
+						(<article className="reflex-mosaic-01__item-article">
+							<a href={this.props.url} title={this.props.description}>
+								{/* BEGIN : Contenedor imagen */}
+								<div className="reflex-mosaic-01__img">
+									<img alt={`imagen - ${this.props.description}`} className="imagen-fondo" src={this.props.background} title={this.props.title}/>
+									{this.iconType}
+								</div>
+								{/* END   : Contenedor imagen */}
+								
+								{/* BEGIN : Descripcion del item */}
+								<div className="reflex-mosaic-01__description color-telenovelas">
+									<p className="reflex-mosaic-01__title">{this.props.title}</p>
+									<p className="reflex-mosaic-01__desc">{this.props.description}</p>
+								</div>
+								{/* END   : Descripcion del item */}
+							</a>
+						</article>)}
+					{/* END   : Balidacion par identificar espacios para banners */}
 				</div>);
 	}//render
 }//ItemSearch
@@ -96,6 +97,7 @@ class ItemSearch extends Component
  * @type JSON
  */
 ItemSearch.defaultProps = {
+							banner      : false,
 							background  : "",
 							description : "descripcion",
 							title       : "titulo",

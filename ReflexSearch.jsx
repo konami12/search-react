@@ -14,6 +14,12 @@ import SuccessSearch from "./components/containers/SuccessSearch.jsx";
 //=================== CONSTANTES ===================//
 
 /**
+ * Identificador del dispositibo.
+ *
+ * @type String.
+ */
+const DEVICE = LogicSearch.isMobile();
+/**
  * Numero de elementos por default en el caso de error.
  * 
  * @type Integer
@@ -57,19 +63,21 @@ class ReflexSearch extends Component
 		 */
 		this.Client = new ClientGSA();
 
-		//Delcaracion de estados.
-		this.state = {
-						action    : 1,
-						component : "ok",
-						gsa       : [], 
-						loading   : false,
-						total     : 0
-					 };
-
 		//funciones especiales
 		this.onFilter   = this.onFilter.bind(this);
 		this.onInfinity = this.onInfinity.bind(this);
-		this.num        = parseInt(this.props.config_gsa.num);
+		this.totalPage  = (DEVICE === "phone") ? props.load_mobile : props.load_desktop;
+
+		//Delcaracion de estados.
+		this.state = {
+						banner    : 0,
+						component : "ok",
+						gsa       : [],
+						loading   : false,
+						page      : 0,
+						totalPage : this.totalPage,
+					 };
+
 	}//consturctor
 
 	//==================================================//
@@ -114,7 +122,7 @@ class ReflexSearch extends Component
 	 */
 	onFilter(element)
 	{
-		const FILTER                         = LogicSearch.filter(element);
+		const FILTER                         = LogicSearch.filter(element, this.totalPage);
 		this.props.config_gsa.requiredfields = FILTER.filter;
 		this.props.config_gsa.start          = FILTER.start;
 		this.setState(FILTER.state);
@@ -137,12 +145,11 @@ class ReflexSearch extends Component
 		}
 		else
 		{
-			let loadPage = LogicSearch.infinityPage(this.state.action, this.state.total, this.num);
-
-			if (loadPage.flag)
+			let nextPage = LogicSearch.infinityPage(this.state.page, this.state.totalPage, this.props.config_gsa.num);
+			if (nextPage.flag)
 			{
-				this.setState({action : loadPage.action});
-				this.props.config_gsa.start = loadPage.start;
+				this.setState(nextPage.state);
+				this.props.config_gsa.start = nextPage.start;
 				this.query;
 			}//if (loadPage.flag)
 		}
@@ -173,12 +180,15 @@ class ReflexSearch extends Component
 
 			else
 			{
+				let pages = LogicSearch.total(this.Client.totalItems, this.props.config_gsa.num, this.state.totalPage);
+				//se realiza limpieza de resultados para colocar el espacio para el banner.
 				this.setState({
-								gsa     : LogicSearch.cleanItems(data, this.state.gsa), 
-								loading : true,
-								total   : Math.floor(this.Client.totalItems/this.num)
+								banner    : 1,
+								gsa       : LogicSearch.cleanItems(data, this.state.gsa, this.state.banner), 
+								loading   : true,
+								totalPage : pages
 	   				         });				
-			}//else 
+			}//else
 		})
 		.catch(error => {
 			this.setState({
@@ -205,11 +215,12 @@ class ReflexSearch extends Component
 
 		if (this.state.loading)
 		{
+
 			//se definen los props para ErrorSearch.
 			const PROPS_ERROR = {
-									msg_error     :this.props.msg_error,
-							    	msg_recommend :this.props.msg_recommend,
-									req_gsa       :this.state.gsa
+									msg_error     : this.props.msg_error,
+							    	msg_recommend : this.props.msg_recommend,
+									req_gsa       : this.state.gsa
 							    };
 
 			//se definen los props para SuccessSearch.

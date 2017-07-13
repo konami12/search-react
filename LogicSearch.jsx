@@ -11,7 +11,19 @@ const BTN_CLASS = "prime-secciones__buttons_selective";
  * 
  * @type Integer
  */
-const LIMIT = 300;
+const LIMIT        = 300;
+/**
+ * Ancho de un smartphone.
+ * 
+ * @type Integer.
+ */
+const WIDTH_PHONE  = 640;
+/**
+ * Ancho de una tablet.
+ * 
+ * @type Integer.
+ */
+const WIDTH_TABLET = 768;
 
 //==================================================//
 
@@ -31,16 +43,15 @@ class LogicSearch
 	 *
 	 * @return Array
 	 */
-	static cleanItems(items, state)
+	static cleanItems(items, state, banner)
 	{
 		let clean = [];
-
 		//se verifica que se un arreglo y que tenga por lo menos un elemento
 		if (items instanceof Array && items.length > 0)
 		{
 			clean = items.reduce((result, json) => {
 				let item         = {};
-				item.background  = json.METAS.imagen_353x199;
+				item.background  = (!json.METAS.imagen_353x199) ? json.METAS.thumbnail : json.METAS.imagen_353x199;
 				item.description = json.METAS.title;
 				item.id          = json.CID;
 				item.title       = json.METAS.topico;
@@ -50,26 +61,25 @@ class LogicSearch
 				return result;
 			}, []);
 
-			if (state.length > 0)
-			{
-				
-				clean = state.concat(clean);
-			}
+			clean = (banner === 0 ) ? this.paintBanner(clean) : clean;
+			clean = (state.length > 0) ? state.concat(clean) : clean;
 		}//if (items instanceof Array)
+
 
 		return clean;
 	}//cleanItems
-	
+
 	//==================================================//
 
 	/**
 	 * Se obtienen los para metros para el filtrado.
 	 *
 	 * @param Object DOM element Referencia ah elemento de DOM.
+	 * @param Integer    pages   Numero de paginas para recargar.
 	 * 
 	 * @return String
 	 */
-	static filter(element)
+	static filter(element, pages)
 	{
 		document.querySelector(`a.${BTN_CLASS}`).classList.remove(BTN_CLASS);
 		element.classList.add(BTN_CLASS);
@@ -78,8 +88,9 @@ class LogicSearch
 					filter : element.dataset.filter,
 					start  : 0,
 					state  : {
-								action : 0, 
-								gsa    : [],
+								gsa       : [],
+								page      : 0, 
+								totalPage : pages
 							 }
 			   };
 	}//filter
@@ -91,26 +102,79 @@ class LogicSearch
 	 *
 	 * @return integer
 	 */
-	static infinityPage(action, total, elements)
+	static infinityPage(continuePage, stopPage, numPage)
 	{
-		let scroll   = (document.body.scrollHeight - window.innerHeight) - LIMIT;
-		let mvScroll = (Math.floor(window.scrollY)) - LIMIT;
-		let start    = 1;
 		let flag     = false;
+		let start    = 0;
+        let scroll   = (document.body.scrollHeight - window.innerHeight) - LIMIT;
+        let mvScroll = (Math.floor(window.scrollY)) - LIMIT;
+        let request  = {};
 
-		if (mvScroll === scroll && action < total)
-		{
-			action += 1;
-			start  = elements * action;
-			flag   = true
-		}
-		return {
-				action : action,
-				flag   : flag,
-				start  : start
-			   };
+        if (scroll === mvScroll && continuePage < stopPage)
+        {
+        	continuePage += 1;
+        	flag         = true;
+        	start        = numPage * continuePage;
+        }
+
+        request["state"] = {page : continuePage};
+        request["flag"]  = flag;
+        request["start"] = start;
+
+        return request;
 	}//infinityPage
 
+	//==================================================//
+
+	/**
+	 * Permite identificar el tipo de dispositivo.
+	 *
+	 * return string.
+	 */
+	static isMobile()
+	{
+        let device      = navigator.userAgent.match(/iPhone|iPad|iPod|Android/i);
+        let widthScreen = window.screen.width;
+        let request     = "desktop";
+
+		if (device !== null)
+		{
+            if (widthScreen <= WIDTH_PHONE)
+            {
+                request = 'phone';
+            }
+            else if (widthScreen > WIDTH_PHONE && widthScreen <= WIDTH_TABLET)
+            {
+                request = 'tablet';
+            }			
+		}
+		return request;
+	}//isMobile
+
+	//==================================================//
+
+	/**
+	 * Gener el espacio para integrar un banner.
+	 *
+	 * @param Array data  Arreglo de elementos.
+	 * 
+	 * @return array.
+	 */
+	static paintBanner(data)
+	{
+		const dummyItem = {banner : true};
+		let item = data.shift();
+				   data.pop();
+		return [item, dummyItem].concat(data);
+	}//paintBanner
+
+	//==================================================//
+	
+	static total(numItem, numGSA, total)
+	{
+		let result = Math.round(numItem/numGSA);
+		return (result >= total) ? total : result;
+	}
 }//LogicSearch
 
 //==================================================//
